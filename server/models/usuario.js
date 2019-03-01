@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 let Schema = mongoose.Schema;
+
+//Metodos deprecados
+mongoose.set('useCreateIndex', true)
+mongoose.set('useFindAndModify', false);
+
+let rolesValidos = {
+    values: ['ADMIN_ROLE', 'USER_ROLE'],
+    message: '{VALUE} no es un rol valido'
+}
 
 let usuarioSchema = new Schema({
     nombre: {
@@ -8,6 +18,7 @@ let usuarioSchema = new Schema({
         required: [true, 'El nombre es necesario']
     },
     email: {
+        unique: true,
         type: String,
         required: [true, 'El correo es necesario']
     },
@@ -21,7 +32,8 @@ let usuarioSchema = new Schema({
     },
     role: {
         type: String,
-        default: 'USER_ROLE'
+        default: 'USER_ROLE',
+        enum: rolesValidos
     },
     estado: {
         type: Boolean,
@@ -34,5 +46,14 @@ let usuarioSchema = new Schema({
 
 });
 
+usuarioSchema.methods.toJSON = function() {
+    let user = this
+    let userObject = user.toObject()
+    delete userObject.password
+
+    return userObject
+}
+
+usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico' })
 
 module.exports = mongoose.model('Usuario', usuarioSchema)
