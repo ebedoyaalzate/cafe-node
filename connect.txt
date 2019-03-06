@@ -1,0 +1,5 @@
+mongo "mongodb+srv://cluster0-3vt2r.mongodb.net/cafe"     --username mongo
+user: mongo
+pass: 1234
+
+

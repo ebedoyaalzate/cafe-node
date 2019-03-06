@@ -17,7 +17,7 @@ const routes = require('./routes/usuario')
 app.use('/', routes)
 
 
-mongoose.connect('mongodb://localhost:27017/cafe', { useNewUrlParser: true }, (err, res) => {
+mongoose.connect(process.env.urlDB, { useNewUrlParser: true }, (err, res) => {
     if (err) throw err
 
     console.log('Base de datos ONLINE');
